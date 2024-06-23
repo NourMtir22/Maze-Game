@@ -365,6 +365,7 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.20f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/BulletScript.cs"
 "Assets/EnemyFollow.cs"
+"Assets/GameRespawn.cs"
 "Assets/Joystick Pack/Examples/JoystickPlayerExample.cs"
 "Assets/Joystick Pack/Examples/JoystickSetterExample.cs"
 "Assets/Joystick Pack/Scripts/Base/Joystick.cs"

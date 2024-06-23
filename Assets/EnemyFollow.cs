@@ -44,7 +44,7 @@ public class EnemyFollow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player" && bulletObj != null)
+        if (other.gameObject.tag == "Player" )
         {
             Destroy(bulletObj);
         }
