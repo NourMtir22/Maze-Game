@@ -10,6 +10,12 @@ public class MovementScript : MonoBehaviour
     private float ySpeed;
     private CharacterController conn;
     public bool isGrounded;
+    public Joystick joy;
+
+    // Declare the missing variables
+    private float horizontalSpeed;
+    private float verticalSpeed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,41 +27,74 @@ public class MovementScript : MonoBehaviour
     {
         float horizontalMove = Input.GetAxis("Horizontal");
         float verticalMove = Input.GetAxis("Vertical");
-       
+
+        float joyHorizontalMove = joy.Horizontal * speed;
+        float joyVerticalMove = joy.Vertical * speed;
+
         Vector3 moveDirection = new Vector3(horizontalMove, 0, verticalMove);
         moveDirection.Normalize();
         float magnitude = moveDirection.magnitude;
-        magnitude= Mathf.Clamp01(magnitude);
-        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
+        magnitude = Mathf.Clamp01(magnitude);
+        conn.SimpleMove(moveDirection * magnitude * speed);
+
+        Vector3 joyMovement = new Vector3(joyHorizontalMove, 0, joyVerticalMove);
+        joyMovement.Normalize();
+        float joyMagnitude = joyMovement.magnitude;
+        joyMagnitude = Mathf.Clamp01(joyMagnitude);
+        conn.SimpleMove(joyMovement * joyMagnitude * speed);
+
+        if (horizontalMove >= 0.2f)
+        {
+            horizontalSpeed = speed;
+        }
+        else if (horizontalMove <= -0.2f)
+        {
+            horizontalSpeed = -speed;
+        }
+        else
+        {
+            horizontalSpeed = 0f;
+        }
+
+        if (verticalMove >= 0.2f)
+        {
+            verticalSpeed = speed;
+        }
+        else if (verticalMove <= -0.2f)
+        {
+            verticalSpeed = -speed;
+        }
+        else
+        {
+            verticalSpeed = 0f;
+        }
 
         ySpeed += Physics.gravity.y * Time.deltaTime;
-        if(Input.GetButtonDown("Jump"))
+
+        if (Input.GetButtonDown("Jump"))
         {
-            ySpeed = 0.5f;
+            ySpeed = jumpedSpeed;
         }
 
         Vector3 vel = moveDirection * magnitude;
         vel.y = ySpeed;
         conn.Move(vel * Time.deltaTime);
+
         if (conn.isGrounded)
         {
             ySpeed = -0.5f;
             isGrounded = true;
-            if(Input.GetButton("Jump"))
+            if (Input.GetButton("Jump"))
             {
                 ySpeed = jumpedSpeed;
-                isGrounded= false;
+                isGrounded = false;
             }
-        
         }
-        
 
-       // transform.Translate(vel * Time.deltaTime);
-        if (moveDirection != Vector3.up)
+        if (moveDirection != Vector3.zero)
         {
             Quaternion toRotate = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation=Quaternion.RotateTowards(transform.rotation, toRotate, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotate, rotationSpeed * Time.deltaTime);
         }
-
     }
 }
