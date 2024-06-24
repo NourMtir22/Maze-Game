@@ -1,67 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject gameOver, heart0, heart1, heart2, heart3;
-    public static int health;
+    public static GameManager instance;
+    public int itemsToCollect = 5;
+    private int itemsCollected = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        health = 4;
-        heart0.gameObject.SetActive(true);
-        heart1.gameObject.SetActive(true);
-        heart2.gameObject.SetActive(true);
-        heart3.gameObject.SetActive(true);
-        gameOver.gameObject.SetActive(false);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        switch (health)
+        // Ensure there's only one instance of the GameManager
+        if (instance == null)
         {
-            case 4:
-                heart0.gameObject.SetActive(true);
-                heart1.gameObject.SetActive(true);
-                heart2.gameObject.SetActive(true);
-                heart3.gameObject.SetActive(true);
-                break;
-            case 3:
-                heart0.gameObject.SetActive(true);
-                heart1.gameObject.SetActive(true);
-                heart2.gameObject.SetActive(true);
-                heart3.gameObject.SetActive(false);
-                break;
-            case 2:
-                heart0.gameObject.SetActive(true);
-                heart1.gameObject.SetActive(true);
-                heart2.gameObject.SetActive(true);
-                heart3.gameObject.SetActive(false);
-                break;
-            case 1:
-                heart0.gameObject.SetActive(true);
-                heart1.gameObject.SetActive(true);
-                heart2.gameObject.SetActive(false);
-                heart3.gameObject.SetActive(false);
-                break;
-            case 0:
-                heart0.gameObject.SetActive(true);
-                heart1.gameObject.SetActive(true);
-                heart2.gameObject.SetActive(false);
-                heart3.gameObject.SetActive(false);
-                break;
-            default:
-                heart0.gameObject.SetActive(false);
-                heart1.gameObject.SetActive(false);
-                heart2.gameObject.SetActive(false);
-                heart3.gameObject.SetActive(false);
-                gameOver.gameObject.SetActive(true);
-                Time.timeScale = 0;
-                break;
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
+    public void CollectItem()
+    {
+        itemsCollected++;
+        Debug.Log("Items Collected: " + itemsCollected);
+
+        if (itemsCollected >= itemsToCollect)
+        {
+            WinGame();
+        }
+    }
+
+    void WinGame()
+    {
+        Debug.Log("You collected all items! You win!");
+        // Implement win logic here (e.g., show win screen, load next level, etc.)
+    }
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over!");
+        // Implement game over logic here (e.g., show game over screen, restart level, etc.)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Restart the current level
+    }
 }

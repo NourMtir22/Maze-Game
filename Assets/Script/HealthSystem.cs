@@ -23,7 +23,7 @@ public class HealthSystem : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            GameOver();
+            GameManager.instance.GameOver();
         }
     }
 
@@ -33,11 +33,5 @@ public class HealthSystem : MonoBehaviour
         {
             healthText.text = "Health: " + currentHealth;
         }
-    }
-
-    void GameOver()
-    {
-        Debug.Log("Game Over!");
-        // Implement game over logic here (e.g., show game over screen, restart the game, etc.)
     }
 }

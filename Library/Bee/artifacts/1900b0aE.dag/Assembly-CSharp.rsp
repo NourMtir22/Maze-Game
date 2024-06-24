@@ -371,14 +371,15 @@
 "Assets/Joystick Pack/Scripts/Joysticks/FloatingJoystick.cs"
 "Assets/Joystick Pack/Scripts/Joysticks/VariableJoystick.cs"
 "Assets/Script/BulletScript.cs"
+"Assets/Script/CameraFollow.cs"
+"Assets/Script/CollectibleItem.cs"
+"Assets/Script/DoorController.cs"
 "Assets/Script/EnemyFollow.cs"
 "Assets/Script/EnemyHealth.cs"
 "Assets/Script/FollowScript.cs"
 "Assets/Script/GameManager.cs"
-"Assets/Script/GameRespawn.cs"
 "Assets/Script/HealthSystem.cs"
 "Assets/Script/MovementScript.cs"
-"Assets/Script/RestartGame.cs"
 "Assets/Script/ShootingScript.cs"
 -langversion:9.0
 

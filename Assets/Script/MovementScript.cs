@@ -4,97 +4,53 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour
 {
-    public float speed;
-    public float rotationSpeed;
-    public float jumpedSpeed;
-    private float ySpeed;
-    private CharacterController conn;
-    public bool isGrounded;
-    public Joystick joy;
+    public float speed = 6.0f;
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
 
-    // Declare the missing variables
-    private float horizontalSpeed;
-    private float verticalSpeed;
+    private Vector3 moveDirection = Vector3.zero;
+    private CharacterController characterController;
+    public Transform cameraTransform; // Reference to the camera's transform
 
-    // Start is called before the first frame update
     void Start()
     {
-        conn = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        float horizontalMove = Input.GetAxis("Horizontal");
-        float verticalMove = Input.GetAxis("Vertical");
-
-        float joyHorizontalMove = joy.Horizontal * speed;
-        float joyVerticalMove = joy.Vertical * speed;
-
-        Vector3 moveDirection = new Vector3(horizontalMove, 0, verticalMove);
-        moveDirection.Normalize();
-        float magnitude = moveDirection.magnitude;
-        magnitude = Mathf.Clamp01(magnitude);
-        conn.SimpleMove(moveDirection * magnitude * speed);
-
-        Vector3 joyMovement = new Vector3(joyHorizontalMove, 0, joyVerticalMove);
-        joyMovement.Normalize();
-        float joyMagnitude = joyMovement.magnitude;
-        joyMagnitude = Mathf.Clamp01(joyMagnitude);
-        conn.SimpleMove(joyMovement * joyMagnitude * speed);
-
-        if (horizontalMove >= 0.2f)
+        // Check if the player is on the ground
+        if (characterController.isGrounded)
         {
-            horizontalSpeed = speed;
-        }
-        else if (horizontalMove <= -0.2f)
-        {
-            horizontalSpeed = -speed;
-        }
-        else
-        {
-            horizontalSpeed = 0f;
-        }
+            // Read input from keyboard
+            float horizontalMove = Input.GetAxis("Horizontal");
+            float verticalMove = Input.GetAxis("Vertical");
 
-        if (verticalMove >= 0.2f)
-        {
-            verticalSpeed = speed;
-        }
-        else if (verticalMove <= -0.2f)
-        {
-            verticalSpeed = -speed;
-        }
-        else
-        {
-            verticalSpeed = 0f;
-        }
+            // Calculate the movement direction relative to the camera
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
 
-        ySpeed += Physics.gravity.y * Time.deltaTime;
+            forward.y = 0f; // We don't want the player to move up or down
+            right.y = 0f;
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            ySpeed = jumpedSpeed;
-        }
+            forward.Normalize();
+            right.Normalize();
 
-        Vector3 vel = moveDirection * magnitude;
-        vel.y = ySpeed;
-        conn.Move(vel * Time.deltaTime);
+            // Set the movement direction based on input
+            moveDirection = forward * verticalMove + right * horizontalMove;
+            moveDirection *= speed;
 
-        if (conn.isGrounded)
-        {
-            ySpeed = -0.5f;
-            isGrounded = true;
+            // Handle jumping
             if (Input.GetButton("Jump"))
             {
-                ySpeed = jumpedSpeed;
-                isGrounded = false;
+                moveDirection.y = jumpSpeed;
             }
         }
 
-        if (moveDirection != Vector3.zero)
-        {
-            Quaternion toRotate = Quaternion.LookRotation(moveDirection, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotate, rotationSpeed * Time.deltaTime);
-        }
+        // Apply gravity
+        moveDirection.y -= gravity * Time.deltaTime;
+
+        // Move the player
+        characterController.Move(moveDirection * Time.deltaTime);
     }
 }
