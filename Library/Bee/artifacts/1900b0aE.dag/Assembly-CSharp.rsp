@@ -372,10 +372,14 @@
 "Assets/Joystick Pack/Scripts/Joysticks/VariableJoystick.cs"
 "Assets/Script/BulletScript.cs"
 "Assets/Script/EnemyFollow.cs"
+"Assets/Script/EnemyHealth.cs"
 "Assets/Script/FollowScript.cs"
+"Assets/Script/GameManager.cs"
 "Assets/Script/GameRespawn.cs"
+"Assets/Script/HealthSystem.cs"
 "Assets/Script/MovementScript.cs"
-"Assets/Script/SpawnCoinScript.cs"
+"Assets/Script/RestartGame.cs"
+"Assets/Script/ShootingScript.cs"
 -langversion:9.0
 
 /deterministic

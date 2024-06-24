@@ -5,12 +5,14 @@ using UnityEngine;
 public class GameRespawn : MonoBehaviour
 {
     public float threshold;
-   
-    void FixedUpdate()
+    public Vector3 spawnPoint;
+
+    void Update()
     {
-        if(transform.position.y < threshold)
+        if (transform.position.y < threshold)
         {
-            transform.position = new Vector3();
+            transform.position = spawnPoint;
+            GameManager.health -= 1;
         }
     }
 }
