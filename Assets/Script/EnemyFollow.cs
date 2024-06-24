@@ -8,20 +8,18 @@ public class EnemyFollow : MonoBehaviour
     public NavMeshAgent enemy;
     public Transform player;
 
-    [SerializeField] private float timer = 5;
+    [SerializeField] private float timer = 2;
     private float bulletTime;
 
     public GameObject enemyBullet;
     public Transform spawnPoint;
 
-    public float enemySpeed;
-
-    private GameObject bulletObj; // Define bulletObj as a class-level variable
+    public float bulletSpeed;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        bulletTime = timer;
     }
 
     // Update is called once per frame
@@ -36,17 +34,21 @@ public class EnemyFollow : MonoBehaviour
         bulletTime -= Time.deltaTime;
         if (bulletTime > 0) return;
         bulletTime = timer;
-        bulletObj = Instantiate(enemyBullet, spawnPoint.transform.position, spawnPoint.transform.rotation) as GameObject;
+
+        GameObject bulletObj = Instantiate(enemyBullet, spawnPoint.position, spawnPoint.rotation);
         Rigidbody bulletRig = bulletObj.GetComponent<Rigidbody>();
-        bulletRig.AddForce(bulletRig.transform.forward * enemySpeed);
-        Destroy(bulletObj, 5f);
+        bulletRig.velocity = spawnPoint.forward * bulletSpeed;
+
+        // Use Destroy with a check to avoid accessing a destroyed object
+        StartCoroutine(DestroyBulletAfterTime(bulletObj, 5f));
     }
 
-    private void OnTriggerEnter(Collider other)
+    IEnumerator DestroyBulletAfterTime(GameObject bullet, float delay)
     {
-        if (other.gameObject.tag == "Player" )
+        yield return new WaitForSeconds(delay);
+        if (bullet != null)
         {
-            Destroy(bulletObj);
+            Destroy(bullet);
         }
     }
 }
